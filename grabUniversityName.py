@@ -12,9 +12,6 @@ def getName():
 
     for links in soup.find_all("td"):
         try:
-            # link.append(links.a.get('href'))
-            # link.append(links.get_text().strip())
-            print(links.a.get_text().strip())
             name.append(links.a.get_text().strip())
         except:
             continue
@@ -22,4 +19,23 @@ def getName():
     name = name[1:-1]
     return name
 
-print(getName())
+
+def convertToLinkedIn(list):
+    linkedIn = []
+
+    for n in list:
+        link = ""
+        new_link = ""
+        for l in n:
+            if(l == " "):
+                link += "%20"
+            else:
+                link += l
+        new_link = "https://www.linkedin.com/search/results/all/?keywords=" + link + "%20business%20professor&origin=GLOBAL_SEARCH_HEADER"
+        linkedIn.append(new_link)
+
+    return linkedIn
+
+
+print(convertToLinkedIn(getName()))
+print("Lenght: ", len(convertToLinkedIn(getName())))
