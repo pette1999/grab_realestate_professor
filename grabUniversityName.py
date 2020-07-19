@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 URL = "https://www.4icu.org/us/"
 
-headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"}
+headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"}
 
 def getName():
     page = requests.get(URL)
@@ -21,7 +21,7 @@ def getName():
 
 
 def getCollegeLink():
-    page = requests.get(URL)
+    page = requests.get(URL, headers=headers)
     soup = BeautifulSoup(page.content, 'html5lib')
     href = []
 
@@ -35,6 +35,31 @@ def getCollegeLink():
 
     return href
 
+def writeToFile(list):
+    collegeLink = []
+    collegeName = []
+    file1 = open("collegeLink.txt", "a")
+    file2 = open("collegeName.txt", "a")
+
+    for l in list:
+        page = requests.get(l)
+        soup = BeautifulSoup(page.content, 'html5lib')
+
+        for links in soup.find_all("td"):
+            try:
+                if(links.a.get('itemprop') == "url"):
+                    collegeLink.append(links.a.get('href'))
+                    file1.write(links.a.get('href') + "\n")
+                    file1.close()
+                    print(links.a.get('href'))
+
+                    collegeName.append(links.a.span.get_text().strip())
+                    file2.write(links.a.span.get_text().strip() + "\n")
+                    file2.close()
+                    print(links.a.span.get_text().strip())
+            except:
+                continue
+    
 
 def convertToLinkedIn(list):
     linkedIn = []
@@ -52,4 +77,9 @@ def convertToLinkedIn(list):
 
     return linkedIn
 
-getCollegeLink()
+# list = getCollegeLink()
+
+# for i in list:
+#     print(i)
+
+writeToFile(getCollegeLink())
