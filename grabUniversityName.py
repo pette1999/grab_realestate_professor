@@ -20,6 +20,22 @@ def getName():
     return name
 
 
+def getCollegeLink():
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, 'html5lib')
+    href = []
+
+    for links in soup.find_all("td"):
+        try:
+            href.append("https://www.4icu.org/" + links.a.get('href'))
+        except:
+            continue
+
+    href = href[1:-1]
+
+    return href
+
+
 def convertToLinkedIn(list):
     linkedIn = []
 
@@ -36,6 +52,4 @@ def convertToLinkedIn(list):
 
     return linkedIn
 
-
-print(convertToLinkedIn(getName()))
-print("Lenght: ", len(convertToLinkedIn(getName())))
+getCollegeLink()
